@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@layer base {
+    :root {
+        --brand-primary: #2563eb;
+        /* Etica MMF primary blue */
+        --brand-secondary: #1e3a8a;
+        /* Darker shade for contrast */
+        --brand-accent: #f59e0b;
+        /* Accent for highlights (e.g., active step) */
+        --radius-lg: 1rem;
+        --radius-md: 0.5rem;
+    }
+
+    body {
+        @apply antialiased bg-gray-50 text-gray-900 font-sans;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-semibold text-gray-900;
+    }
+
+    p {
+        @apply text-gray-700 leading-relaxed;
+    }
+
+    a {
+        @apply text-[var(--brand-primary)] hover:text-[var(--brand-secondary)] transition-colors;
+    }
+
+    button {
+        @apply rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:ring-offset-2;
+    }
+
+    input,
+    select,
+    textarea {
+        @apply rounded-md border border-gray-300 focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)] focus:ring-1 px-3 py-2 text-sm;
+    }
+}
+
+@layer components {
+    .container {
+        @apply max-w-5xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+
+    .card {
+        @apply bg-white shadow-sm rounded-2xl border border-gray-200 p-6;
+    }
+
+    .stepper {
+        @apply flex items-center justify-between gap-2 mb-6;
+    }
+
+    .step {
+        @apply flex-1 flex items-center relative;
+    }
+
+    .step-circle {
+        @apply flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-300 text-sm font-medium;
+    }
+
+    .step-active .step-circle {
+        @apply border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white;
+    }
+
+    .step-completed .step-circle {
+        @apply border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white;
+    }
+
+    .step-label {
+        @apply text-xs mt-2 text-gray-600 text-center;
+    }
+}
+
+@layer utilities {
+    .fade-in {
+        @apply transition-opacity duration-300 ease-in;
+    }
+
+    .fade-out {
+        @apply opacity-0 transition-opacity duration-300 ease-out;
+    }
+
+    .btn-primary {
+        @apply bg-[var(--brand-primary)] text-white hover:bg-[var(--brand-secondary)];
+    }
+
+    .btn-secondary {
+        @apply bg-gray-100 text-gray-900 hover:bg-gray-200;
+    }
+
+    .section {
+        @apply py-8 sm:py-12;
+    }
+}
