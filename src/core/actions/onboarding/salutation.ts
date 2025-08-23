@@ -7,7 +7,6 @@ export const createSalutation = async (input: {
   description?: string;
   added_by: string;
 }) => {
-  // Validate input
   const schema = z.object({
     name: z.string().min(1, "Name is required"),
     description: z.string().optional(),
