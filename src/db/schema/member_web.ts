@@ -1,0 +1,37 @@
+import {
+  pgTable,
+  serial,
+  text,
+  integer,
+  date,
+  boolean,
+} from "drizzle-orm/pg-core";
+import { createdAt, updatedAt, deletedAt } from "@/db/utils/timestamps";
+
+export const members_web = pgTable("members_web", {
+  id: serial("id").primaryKey(),
+  member_no: text("member_no").notNull(),
+  member_type: text("member_type").notNull(),
+  salutation: text("salutation"),
+  first_name: text("first_name").notNull(),
+  last_name: text("last_name").notNull(),
+  other_name: text("other_name"),
+  identification_no: text("identification_no").notNull(),
+  identification_type_id: integer("identification_type_id").notNull(),
+  dob: date("dob").notNull(),
+  gender: text("gender").notNull(),
+  telephone_no: text("telephone_no"),
+  mobile_no: text("mobile_no").notNull(),
+  email_address: text("email_address").notNull(),
+  postal_address: text("postal_address"),
+  postal_code: text("postal_code"),
+  town_id: integer("town_id"),
+  country_id: integer("country_id"),
+  county_state: text("county_state"),
+  physical_address: text("physical_address"),
+  resident: boolean("resident").default(true),
+  nationality: text("nationality").default("Kenyan"),
+  created_at: createdAt,
+  updated_at: updatedAt,
+  deleted_at: deletedAt,
+});

@@ -1,0 +1,1 @@
+export { member_files_web } from "@/db/schema/member_documents_web";
