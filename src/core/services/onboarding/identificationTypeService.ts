@@ -1,4 +1,4 @@
-import { db } from "@/db/client";
+import { db } from "@/core/lib/db-client";
 import { identification_types } from "@/db/schema/identification_types";
 import { eq } from "drizzle-orm";
 

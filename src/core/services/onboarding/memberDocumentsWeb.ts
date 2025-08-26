@@ -1,5 +1,4 @@
-// src/server/services/memberFileService.ts
-import { db } from "@/db/client";
+import { db } from "@/core/lib/db-client";
 import { member_files_web } from "@/db/schema/member_documents_web";
 import { eq } from "drizzle-orm";
 

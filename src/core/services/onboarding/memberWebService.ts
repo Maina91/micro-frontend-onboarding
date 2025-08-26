@@ -1,5 +1,4 @@
-// src/server/services/memberService.ts
-import { db } from "@/db/client";
+import { db } from "@/core/lib/db-client";
 import { members_web } from "@/db/schema/member_web";
 import { eq } from "drizzle-orm";
 
@@ -104,16 +103,16 @@ export const memberService = {
 
   // Get members by ID or all
   get: async (member_no: string) => {
-      try {
-          return await db
-              .select()
-              .from(members_web)
-              .where(eq(members_web.member_no, member_no));
+    try {
+      return await db
+        .select()
+        .from(members_web)
+        .where(eq(members_web.member_no, member_no));
     } catch (error) {
       console.error("Error fetching members:", error);
       throw new Error(`Failed to fetch members: ${(error as Error).message}`);
     }
-    },
+  },
 
   // Soft delete member
   softDelete: async (id: number) => {

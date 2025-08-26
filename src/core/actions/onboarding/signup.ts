@@ -2,6 +2,23 @@
 // import { createServerFn } from "@tanstack/react-start";
 // import { memberService } from "@/core/services/onboarding/memberSignupService";
 
+import { createServerFn } from "@tanstack/react-start";
+import { getAccountTypes } from "@/core/services/onboarding/accountTypesService";
+
+export const fetchAccountTypes = createServerFn({ method: "GET" })
+  .handler(async () => {
+    try {
+      const data = await getAccountTypes();
+      return { success: true, data };
+    } catch (error) {
+      console.error("fetchAccountTypes action error:", error);
+    return { success: false, error: "Failed to fetch account types" };
+  }
+});
+
+
+
+
 // export const signupSchema = z
 //   .object({
 //     firstName: z.string().min(2),

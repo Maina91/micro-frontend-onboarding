@@ -1,17 +1,15 @@
-"use client";
-
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Checkbox } from "../ui/checkbox";
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   ArrowRight,
   Users,
@@ -22,78 +20,88 @@ import {
 } from "lucide-react";
 // import { validateReferralCode } from "../../server/actions/referrals";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useAccountTypes } from "@/hooks/useAccountTypes";
 
 interface PreSignupFormProps {
   onContinue: (data: { accountType: string; referralCode?: string }) => void;
 }
 
-const accountTypes = [
-  {
-    value: "kenyan_individual",
-    label: "Kenyan Individual",
-    description: "For Kenyan citizens and residents",
-    icon: Users,
-    requirements: [
-      "Valid Kenyan ID",
-      "Proof of address",
-      "Minimum age: 18 years",
-    ],
-  },
-  {
-    value: "foreign_individual",
-    label: "Foreign Individual",
-    description: "For non-Kenyan individuals",
-    icon: Users,
-    requirements: [
-      "Valid passport",
-      "Proof of address",
-      "Tax identification number",
-    ],
-  },
-  {
-    value: "minor",
-    label: "Minor Account",
-    description: "For individuals under 18 years",
-    icon: Shield,
-    requirements: ["Guardian consent", "Birth certificate", "Guardian's ID"],
-  },
-  {
-    value: "joint_account",
-    label: "Joint Account",
-    description: "Shared account for multiple individuals",
-    icon: Users,
-    requirements: [
-      "All parties' IDs",
-      "Joint agreement",
-      "Proof of relationship",
-    ],
-  },
-  {
-    value: "corporate",
-    label: "Corporate Account",
-    description: "For businesses and organizations",
-    icon: Building,
-    requirements: [
-      "Certificate of incorporation",
-      "KRA PIN",
-      "Board resolution",
-    ],
-  },
-  {
-    value: "trust",
-    label: "Trust Account",
-    description: "For trust and estate management",
-    icon: Shield,
-    requirements: [
-      "Trust deed",
-      "Trustee identification",
-      "Legal documentation",
-    ],
-  },
-];
+// const accountTypes = [
+//   {
+//     value: "kenyan_individual",
+//     label: "Kenyan Individual",
+//     description: "For Kenyan citizens and residents",
+//     icon: Users,
+//     requirements: [
+//       "Valid Kenyan ID",
+//       "Proof of address",
+//       "Minimum age: 18 years",
+//     ],
+//   },
+//   {
+//     value: "foreign_individual",
+//     label: "Foreign Individual",
+//     description: "For non-Kenyan individuals",
+//     icon: Users,
+//     requirements: [
+//       "Valid passport",
+//       "Proof of address",
+//       "Tax identification number",
+//     ],
+//   },
+//   {
+//     value: "minor",
+//     label: "Minor Account",
+//     description: "For individuals under 18 years",
+//     icon: Shield,
+//     requirements: ["Guardian consent", "Birth certificate", "Guardian's ID"],
+//   },
+//   {
+//     value: "joint_account",
+//     label: "Joint Account",
+//     description: "Shared account for multiple individuals",
+//     icon: Users,
+//     requirements: [
+//       "All parties' IDs",
+//       "Joint agreement",
+//       "Proof of relationship",
+//     ],
+//   },
+//   {
+//     value: "corporate",
+//     label: "Corporate Account",
+//     description: "For businesses and organizations",
+//     icon: Building,
+//     requirements: [
+//       "Certificate of incorporation",
+//       "KRA PIN",
+//       "Board resolution",
+//     ],
+//   },
+//   {
+//     value: "trust",
+//     label: "Trust Account",
+//     description: "For trust and estate management",
+//     icon: Shield,
+//     requirements: [
+//       "Trust deed",
+//       "Trustee identification",
+//       "Legal documentation",
+//     ],
+//   },
+// ];
 
 export function PreSignupForm({ onContinue }: PreSignupFormProps) {
+  const { data: accountTypes, isLoading, isError } = useAccountTypes();
   const [accountType, setAccountType] = useState("");
+
   const [referralCode, setReferralCode] = useState("");
   const [hasReferralCode, setHasReferralCode] = useState(false);
   const [referralValidated, setReferralValidated] = useState(false);
@@ -108,14 +116,14 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
 
     setValidatingReferral(true);
     try {
-    //   const result = await validateReferralCode(code);
-    //   if (result.success) {
-    //     setReferralValidated(true);
-    //     toast.success("Referral code validated successfully!");
-    //   } else {
-    //     setReferralValidated(false);
-    //     toast.error(result.error || "Invalid referral code");
-    //   }
+      //   const result = await validateReferralCode(code);
+      //   if (result.success) {
+      //     setReferralValidated(true);
+      //     toast.success("Referral code validated successfully!");
+      //   } else {
+      //     setReferralValidated(false);
+      //     toast.error(result.error || "Invalid referral code");
+      //   }
     } catch (error) {
       setReferralValidated(false);
       toast.error("Failed to validate referral code");
@@ -161,8 +169,8 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
     });
   };
 
-  const selectedAccountType = accountTypes.find(
-    (type) => type.value === accountType
+  const selectedAccountType = accountTypes?.find(
+    (type) => type.id.toString() === accountType
   );
 
   return (
@@ -177,51 +185,47 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
       </div>
 
       <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>Account Setup</CardTitle>
-          <CardDescription>
-            Select the type of account that best fits your needs
-          </CardDescription>
-        </CardHeader>
         <CardContent className="space-y-6">
-          {/* Account Type Selection */}
           <div className="space-y-3">
             <Label>Account Type *</Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {accountTypes.map((type) => {
-                const Icon = type.icon;
-                return (
-                  <div
-                    key={type.value}
-                    className={`p-4 border rounded-lg cursor-pointer transition-all hover:border-primary ${
-                      accountType === type.value
-                        ? "border-primary bg-primary/5"
-                        : "border-border"
-                    }`}
-                    onClick={() => setAccountType(type.value)}
-                  >
-                    <div className="flex items-start gap-3">
-                      <Icon className="h-5 w-5 text-primary mt-0.5" />
-                      <div className="flex-1">
-                        <h3 className="font-medium text-foreground">
-                          {type.label}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
+            {isLoading && (
+              <p className="text-sm text-muted-foreground">Loading...</p>
+            )}
+            {isError && (
+              <p className="text-sm text-destructive">
+                Failed to load account types
+              </p>
+            )}
+
+            {accountTypes && (
+              <Select
+                value={accountType}
+                onValueChange={(val) => setAccountType(val)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select account type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {accountTypes.map((type) => (
+                    <SelectItem key={type.id} value={type.id.toString()}>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{type.name}</span>
+                        <span className="text-xs text-muted-foreground">
                           {type.description}
-                        </p>
+                        </span>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
             {errors.accountType && (
               <p className="text-sm text-destructive">{errors.accountType}</p>
             )}
           </div>
 
           {/* Account Type Requirements */}
-          {selectedAccountType && (
+          {/* {selectedAccountType && (
             <div className="p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center gap-2 mb-3">
                 <selectedAccountType.icon className="h-4 w-4 text-primary" />
@@ -246,7 +250,7 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
                 </ul>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Referral Code Section */}
           <div className="space-y-3">

@@ -1,4 +1,4 @@
-import { db } from "@/db/client";
+import { db } from "@/core/lib/db-client";
 import { salutations } from "@/db/schema/salutations";
 import { eq } from "drizzle-orm"; // import eq for conditions
 

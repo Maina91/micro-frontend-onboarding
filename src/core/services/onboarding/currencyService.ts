@@ -1,4 +1,4 @@
-import { db } from "@/db/client";
+import { db } from "@/core/lib/db-client";
 import { currencies } from "@/db/schema/currencies";
 import { eq } from "drizzle-orm";
 
