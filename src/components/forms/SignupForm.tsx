@@ -22,18 +22,11 @@ interface SignupFormProps {
   preSignupData: {
     accountType: string;
     referralCode?: string;
+    
   };
   onBack: () => void;
 }
 
-const accountTypeLabels = {
-  kenyan_individual: "Kenyan Individual",
-  foreign_individual: "Foreign Individual",
-  minor: "Minor Account",
-  joint_account: "Joint Account",
-  corporate: "Corporate Account",
-  trust: "Trust Account",
-};
 
 export function SignupForm({ preSignupData, onBack }: SignupFormProps) {
   const [formData, setFormData] = useState<SignupFormData>({
@@ -95,42 +88,10 @@ export function SignupForm({ preSignupData, onBack }: SignupFormProps) {
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
-        <div>
-          <h2 className="text-2xl font-bold text-foreground">
-            Create Your Account
-          </h2>
-          <p className="text-muted-foreground">
-            Complete your registration details
-          </p>
-        </div>
       </div>
-
-      {/* Account Type Summary */}
-      <Card className="bg-primary/5 border-primary/20">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Account Type</p>
-              <p className="font-medium">
-                {
-                  accountTypeLabels[
-                    preSignupData.accountType as keyof typeof accountTypeLabels
-                  ]
-                }
-              </p>
-            </div>
-            {preSignupData.referralCode && (
-              <Badge variant="secondary">
-                Referral: {preSignupData.referralCode}
-              </Badge>
-            )}
-          </div>
-        </CardContent>
-      </Card>
 
       <Card className="w-full max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
           <CardDescription>
             Provide your details to create your account
           </CardDescription>
@@ -204,185 +165,7 @@ export function SignupForm({ preSignupData, onBack }: SignupFormProps) {
                 <p className="text-sm text-destructive">{errors.phone}</p>
               )}
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="dateOfBirth">Date of Birth *</Label>
-              <Input
-                id="dateOfBirth"
-                type="date"
-                value={formData.dateOfBirth}
-                onChange={(e) =>
-                  handleInputChange("dateOfBirth", e.target.value)
-                }
-                className={errors.dateOfBirth ? "border-destructive" : ""}
-              />
-              {errors.dateOfBirth && (
-                <p className="text-sm text-destructive">{errors.dateOfBirth}</p>
-              )}
-            </div>
-
-            {/* Password Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="password">Password *</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    handleInputChange("password", e.target.value)
-                  }
-                  className={errors.password ? "border-destructive" : ""}
-                />
-                {errors.password && (
-                  <p className="text-sm text-destructive">{errors.password}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password *</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={(e) =>
-                    handleInputChange("confirmPassword", e.target.value)
-                  }
-                  className={errors.confirmPassword ? "border-destructive" : ""}
-                />
-                {errors.confirmPassword && (
-                  <p className="text-sm text-destructive">
-                    {errors.confirmPassword}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Consent Section */}
-            <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
-              <h3 className="font-medium flex items-center gap-2">
-                <Shield className="h-4 w-4" />
-                Agreements & Consent
-              </h3>
-
-              <div className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <Checkbox
-                    id="agreeToTerms"
-                    checked={formData.agreeToTerms}
-                    onCheckedChange={(checked) =>
-                      handleInputChange("agreeToTerms", checked as boolean)
-                    }
-                  />
-                  <div className="space-y-1">
-                    <Label
-                      htmlFor="agreeToTerms"
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      I agree to the{" "}
-                      <a
-                        href="/terms"
-                        className="text-primary hover:underline"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Terms of Service
-                      </a>{" "}
-                      *
-                    </Label>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3">
-                  <Checkbox
-                    id="agreeToPrivacyPolicy"
-                    checked={formData.agreeToPrivacyPolicy}
-                    onCheckedChange={(checked) =>
-                      handleInputChange(
-                        "agreeToPrivacyPolicy",
-                        checked as boolean
-                      )
-                    }
-                  />
-                  <div className="space-y-1">
-                    <Label
-                      htmlFor="agreeToPrivacyPolicy"
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      I agree to the{" "}
-                      <a
-                        href="/privacy"
-                        className="text-primary hover:underline"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Privacy Policy
-                      </a>{" "}
-                      *
-                    </Label>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3">
-                  <Checkbox
-                    id="consentToSms"
-                    checked={formData.consentToSms}
-                    onCheckedChange={(checked) =>
-                      handleInputChange("consentToSms", checked as boolean)
-                    }
-                  />
-                  <div className="space-y-1">
-                    <Label
-                      htmlFor="consentToSms"
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      I consent to receive SMS messages for account verification
-                      and security purposes *
-                    </Label>
-                    <p className="text-xs text-muted-foreground">
-                      Standard messaging rates may apply. You can opt out at any
-                      time.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3">
-                  <Checkbox
-                    id="consentToMarketing"
-                    checked={formData.consentToMarketing}
-                    onCheckedChange={(checked) =>
-                      handleInputChange(
-                        "consentToMarketing",
-                        checked as boolean
-                      )
-                    }
-                  />
-                  <div className="space-y-1">
-                    <Label
-                      htmlFor="consentToMarketing"
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      I would like to receive marketing communications about
-                      investment opportunities
-                    </Label>
-                    <p className="text-xs text-muted-foreground">
-                      Optional - You can change this preference later
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {(errors.agreeToTerms ||
-                errors.agreeToPrivacyPolicy ||
-                errors.consentToSms) && (
-                <div className="text-sm text-destructive">
-                  {errors.agreeToTerms ||
-                    errors.agreeToPrivacyPolicy ||
-                    errors.consentToSms}
-                </div>
-              )}
-            </div>
-
+            
             <Button
               type="submit"
               className="w-full"

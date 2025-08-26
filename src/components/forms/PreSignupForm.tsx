@@ -18,7 +18,6 @@ import {
   AlertCircle,
   FileText,
 } from "lucide-react";
-// import { validateReferralCode } from "../../server/actions/referrals";
 import { toast } from "sonner";
 import {
   Select,
@@ -27,110 +26,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { useAccountTypes } from "@/hooks/useAccountTypes";
 
 interface PreSignupFormProps {
   onContinue: (data: { accountType: string; referralCode?: string }) => void;
 }
 
-// const accountTypes = [
-//   {
-//     value: "kenyan_individual",
-//     label: "Kenyan Individual",
-//     description: "For Kenyan citizens and residents",
-//     icon: Users,
-//     requirements: [
-//       "Valid Kenyan ID",
-//       "Proof of address",
-//       "Minimum age: 18 years",
-//     ],
-//   },
-//   {
-//     value: "foreign_individual",
-//     label: "Foreign Individual",
-//     description: "For non-Kenyan individuals",
-//     icon: Users,
-//     requirements: [
-//       "Valid passport",
-//       "Proof of address",
-//       "Tax identification number",
-//     ],
-//   },
-//   {
-//     value: "minor",
-//     label: "Minor Account",
-//     description: "For individuals under 18 years",
-//     icon: Shield,
-//     requirements: ["Guardian consent", "Birth certificate", "Guardian's ID"],
-//   },
-//   {
-//     value: "joint_account",
-//     label: "Joint Account",
-//     description: "Shared account for multiple individuals",
-//     icon: Users,
-//     requirements: [
-//       "All parties' IDs",
-//       "Joint agreement",
-//       "Proof of relationship",
-//     ],
-//   },
-//   {
-//     value: "corporate",
-//     label: "Corporate Account",
-//     description: "For businesses and organizations",
-//     icon: Building,
-//     requirements: [
-//       "Certificate of incorporation",
-//       "KRA PIN",
-//       "Board resolution",
-//     ],
-//   },
-//   {
-//     value: "trust",
-//     label: "Trust Account",
-//     description: "For trust and estate management",
-//     icon: Shield,
-//     requirements: [
-//       "Trust deed",
-//       "Trustee identification",
-//       "Legal documentation",
-//     ],
-//   },
-// ];
-
 export function PreSignupForm({ onContinue }: PreSignupFormProps) {
   const { data: accountTypes, isLoading, isError } = useAccountTypes();
   const [accountType, setAccountType] = useState("");
+  const [agreeToTermsPrivacy, setAgreeToTermsPrivacy] = useState(false);
 
   const [referralCode, setReferralCode] = useState("");
   const [hasReferralCode, setHasReferralCode] = useState(false);
-  const [referralValidated, setReferralValidated] = useState(false);
-  const [validatingReferral, setValidatingReferral] = useState(false);
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
-  const [agreeToPrivacy, setAgreeToPrivacy] = useState(false);
   const [consentToSms, setConsentToSms] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const validateReferral = async (code: string) => {
-    if (!code.trim()) return;
-
-    setValidatingReferral(true);
-    try {
-      //   const result = await validateReferralCode(code);
-      //   if (result.success) {
-      //     setReferralValidated(true);
-      //     toast.success("Referral code validated successfully!");
-      //   } else {
-      //     setReferralValidated(false);
-      //     toast.error(result.error || "Invalid referral code");
-      //   }
-    } catch (error) {
-      setReferralValidated(false);
-      toast.error("Failed to validate referral code");
-    } finally {
-      setValidatingReferral(false);
-    }
-  };
 
   const handleContinue = () => {
     setErrors({});
@@ -140,12 +52,7 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
       return;
     }
 
-    if (!agreeToTerms) {
-      setErrors({ terms: "You must agree to the Terms of Service" });
-      return;
-    }
-
-    if (!agreeToPrivacy) {
+    if (!agreeToTermsPrivacy) {
       setErrors({ privacy: "You must agree to the Privacy Policy" });
       return;
     }
@@ -157,15 +64,8 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
       return;
     }
 
-    if (hasReferralCode && referralCode && !referralValidated) {
-      setErrors({ referral: "Please validate your referral code first" });
-      return;
-    }
-
     onContinue({
       accountType,
-      referralCode:
-        hasReferralCode && referralValidated ? referralCode : undefined,
     });
   };
 
@@ -186,24 +86,34 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
 
       <Card className="w-full max-w-2xl mx-auto">
         <CardContent className="space-y-6">
+          {/* accountTypes */}
           <div className="space-y-3">
             <Label>Account Type *</Label>
+
+            {/* Loading State */}
             {isLoading && (
-              <p className="text-sm text-muted-foreground">Loading...</p>
+              <Select disabled>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Loading account types..." />
+                </SelectTrigger>
+              </Select>
             )}
+
+            {/* Error State */}
             {isError && (
               <p className="text-sm text-destructive">
                 Failed to load account types
               </p>
             )}
 
-            {accountTypes && (
+            {/* Success State */}
+            {!isLoading && !isError && accountTypes && (
               <Select
-                value={accountType}
+                value={accountType || ""}
                 onValueChange={(val) => setAccountType(val)}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select account type" />
+                  <SelectValue placeholder="---Select account type---" />
                 </SelectTrigger>
                 <SelectContent>
                   {accountTypes.map((type) => (
@@ -219,38 +129,12 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
                 </SelectContent>
               </Select>
             )}
+
+            {/* Validation error */}
             {errors.accountType && (
               <p className="text-sm text-destructive">{errors.accountType}</p>
             )}
           </div>
-
-          {/* Account Type Requirements */}
-          {/* {selectedAccountType && (
-            <div className="p-4 bg-muted/30 rounded-lg">
-              <div className="flex items-center gap-2 mb-3">
-                <selectedAccountType.icon className="h-4 w-4 text-primary" />
-                <h4 className="font-medium">
-                  Selected: {selectedAccountType.label}
-                </h4>
-              </div>
-              <p className="text-sm text-muted-foreground mb-3">
-                {selectedAccountType.description}
-              </p>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-foreground">
-                  Required Documents:
-                </p>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  {selectedAccountType.requirements.map((req, index) => (
-                    <li key={index} className="flex items-center gap-2">
-                      <div className="w-1 h-1 bg-primary rounded-full" />
-                      {req}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )} */}
 
           {/* Referral Code Section */}
           <div className="space-y-3">
@@ -262,7 +146,6 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
                   setHasReferralCode(checked as boolean);
                   if (!checked) {
                     setReferralCode("");
-                    setReferralValidated(false);
                   }
                 }}
               />
@@ -275,105 +158,59 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
                 <div className="flex gap-2">
                   <Input
                     id="referralCode"
-                    placeholder="Enter your referral code (e.g., MMF-ABC123)"
+                    placeholder="Enter your referral code"
                     value={referralCode}
                     onChange={(e) => {
                       setReferralCode(e.target.value.toUpperCase());
-                      setReferralValidated(false);
                     }}
-                    className={`font-mono ${referralValidated ? "border-green-500" : ""}`}
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => validateReferral(referralCode)}
-                    disabled={!referralCode || validatingReferral}
-                  >
-                    {validatingReferral ? "Validating..." : "Validate"}
-                  </Button>
                 </div>
-                {referralValidated && (
-                  <p className="text-xs text-green-600 flex items-center gap-1">
-                    <Shield className="h-3 w-3" />
-                    Referral code validated successfully
-                  </p>
-                )}
                 {errors.referral && (
                   <p className="text-sm text-destructive">{errors.referral}</p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Optional: Enter the referral code provided by your agent
+                  Optional: Enter the referral code provided by your agent if
+                  available.
                 </p>
               </div>
             )}
           </div>
 
+          {/* Legal Agreements & Consent */}
           <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
-            <h3 className="font-medium flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Legal Agreements & Consent
-            </h3>
-
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
                 <Checkbox
-                  id="agreeToTerms"
-                  checked={agreeToTerms}
+                  id="agreeToTermsPrivacy"
+                  checked={agreeToTermsPrivacy}
                   onCheckedChange={(checked) =>
-                    setAgreeToTerms(checked as boolean)
+                    setAgreeToTermsPrivacy(checked as boolean)
                   }
                 />
                 <div className="space-y-1">
                   <Label
-                    htmlFor="agreeToTerms"
-                    className="text-sm font-normal cursor-pointer"
+                    htmlFor="agreeToTermsPrivacy"
+                    className="text-sm font-normal cursor-pointer inline"
                   >
-                    I agree to the{" "}
+                    By continuing, you agree to our{" "}
                     <a
-                      href="/terms"
+                      href="/terms-of-use"
                       className="text-primary hover:underline"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Terms of Service
+                      Terms of Use
                     </a>{" "}
-                    *
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    By agreeing, you accept our terms governing the use of MMF
-                    services
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <Checkbox
-                  id="agreeToPrivacy"
-                  checked={agreeToPrivacy}
-                  onCheckedChange={(checked) =>
-                    setAgreeToPrivacy(checked as boolean)
-                  }
-                />
-                <div className="space-y-1">
-                  <Label
-                    htmlFor="agreeToPrivacy"
-                    className="text-sm font-normal cursor-pointer"
-                  >
-                    I agree to the{" "}
+                    and{" "}
                     <a
-                      href="/privacy"
+                      href="/privacy-policy"
                       className="text-primary hover:underline"
                       target="_blank"
                       rel="noreferrer"
                     >
                       Privacy Policy
-                    </a>{" "}
-                    *
+                    </a>
                   </Label>
-                  <p className="text-xs text-muted-foreground">
-                    We will handle your personal data in accordance with our
-                    privacy policy
-                  </p>
                 </div>
               </div>
 
@@ -402,7 +239,7 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
                           Standard messaging rates may apply. We will send SMS
                           for account verification, security alerts, and
                           important account notifications. You can opt out at
-                          any time by replying STOP.
+                          any time.
                         </p>
                       </div>
                     </div>

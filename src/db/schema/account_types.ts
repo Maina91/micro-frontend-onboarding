@@ -1,4 +1,4 @@
-import { pgSchema, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { pgSchema, serial, text } from "drizzle-orm/pg-core";
 import { makerChecker } from "@/db/utils/makerChecker";
 import { dbConfig } from "@/core/config/db";
 
