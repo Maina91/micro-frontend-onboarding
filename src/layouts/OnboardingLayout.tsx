@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { Stepper } from "@/components/ui/stepper";
 import { useLocation } from "@tanstack/react-router";
