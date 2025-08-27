@@ -14,9 +14,9 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
   // Determine active step based on current path
   const getActiveStep = () => {
     if (location.pathname.includes("signup")) return 0;
-    if (location.pathname.includes("verify-otp?type=phone")) return 1;
-    if (location.pathname.includes("verify-otp?type=email")) return 2;
-    if (location.pathname.includes("complete")) return 3;
+    if (location.pathname.includes("verify-phone-otp")) return 1;
+    if (location.pathname.includes("verify-email-otp")) return 2;
+    if (location.pathname.includes("invest")) return 4;
     return 0;
   };
 
