@@ -14,9 +14,7 @@ export const signupSchema = z
       ] as const,
       { message: "Please select an account type" }
     ),
-    referralCode: z.string().optional(),
-
-    // Personal Information
+    agent_no: z.string().optional(),
     email: z.string().email("Please enter a valid email address"),
     password: z
       .string()
@@ -31,30 +29,15 @@ export const signupSchema = z
     phone: z
       .string()
       .regex(/^\+?[\d\s\-()]+$/, "Please enter a valid phone number"),
-    dateOfBirth: z.string().refine((date) => {
-      const birthDate = new Date(date);
-      const today = new Date();
-      const age = today.getFullYear() - birthDate.getFullYear();
-      return age >= 18;
-    }, "You must be at least 18 years old"),
-
-    // Consent and Agreements
-    agreeToTerms: z
+    agreeToTermsPrivacy: z
       .boolean()
-      .refine(
-        (val) => val === true,
-        "You must agree to the terms and conditions"
-      ),
-    agreeToPrivacyPolicy: z
-      .boolean()
-      .refine((val) => val === true, "You must agree to the privacy policy"),
+      .refine((val) => val === true, "You must agree to the terms and privacy policy"),
     consentToSms: z
       .boolean()
       .refine(
         (val) => val === true,
         "You must consent to SMS communications for account verification"
       ),
-    consentToMarketing: z.boolean().default(false),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",

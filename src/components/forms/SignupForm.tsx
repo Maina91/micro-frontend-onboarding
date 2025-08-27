@@ -21,7 +21,7 @@ import { ArrowLeft, Shield } from "lucide-react";
 interface SignupFormProps {
   preSignupData: {
     accountType: string;
-    referralCode?: string;
+    agent_no?: string;
     
   };
   onBack: () => void;
@@ -31,18 +31,15 @@ interface SignupFormProps {
 export function SignupForm({ preSignupData, onBack }: SignupFormProps) {
   const [formData, setFormData] = useState<SignupFormData>({
     accountType: preSignupData.accountType as any,
-    referralCode: preSignupData.referralCode || "",
+    agent_no: preSignupData.agent_no || "",
     email: "",
     password: "",
     confirmPassword: "",
     firstName: "",
     lastName: "",
     phone: "",
-    dateOfBirth: "",
-    agreeToTerms: false,
-    agreeToPrivacyPolicy: false,
+    agreeToTermsPrivacy: false,
     consentToSms: false,
-    consentToMarketing: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);

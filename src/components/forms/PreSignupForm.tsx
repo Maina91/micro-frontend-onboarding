@@ -3,20 +3,12 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   ArrowRight,
-  Users,
-  Building,
-  Shield,
   AlertCircle,
-  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -28,6 +20,7 @@ import {
 } from "@/components/ui/select";
 
 import { useAccountTypes } from "@/hooks/useAccountTypes";
+import { useAgents } from "@/hooks/useAgent";
 
 interface PreSignupFormProps {
   onContinue: (data: { accountType: string; referralCode?: string }) => void;
@@ -35,11 +28,11 @@ interface PreSignupFormProps {
 
 export function PreSignupForm({ onContinue }: PreSignupFormProps) {
   const { data: accountTypes, isLoading, isError } = useAccountTypes();
+  const { data: agents, isLoading: agentsLoading, isError: agentsError } = useAgents();
   const [accountType, setAccountType] = useState("");
+  const [agent, setAgent] = useState("");
   const [agreeToTermsPrivacy, setAgreeToTermsPrivacy] = useState(false);
-
-  const [referralCode, setReferralCode] = useState("");
-  const [hasReferralCode, setHasReferralCode] = useState(false);
+  const [referredByAgent, setReferredByAgent] = useState(false);
   const [consentToSms, setConsentToSms] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -53,7 +46,7 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
     }
 
     if (!agreeToTermsPrivacy) {
-      setErrors({ privacy: "You must agree to the Privacy Policy" });
+      setErrors({ privacy: "You must agree to the Terms and Privacy Policy" });
       return;
     }
 
@@ -61,6 +54,11 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
       setErrors({
         sms: "You must consent to SMS communications for verification",
       });
+      return;
+    }
+
+    if (referredByAgent && !agent) {
+      setErrors({ agent: "Please select an agent" });
       return;
     }
 
@@ -136,41 +134,53 @@ export function PreSignupForm({ onContinue }: PreSignupFormProps) {
             )}
           </div>
 
-          {/* Referral Code Section */}
+          {/* Agent Referral Section */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <Checkbox
-                id="hasReferralCode"
-                checked={hasReferralCode}
+                id="hasAgent"
+                checked={referredByAgent}
                 onCheckedChange={(checked) => {
-                  setHasReferralCode(checked as boolean);
-                  if (!checked) {
-                    setReferralCode("");
-                  }
+                  setReferredByAgent(checked as boolean);
+                  if (!checked) setAgent("");
                 }}
               />
-              <Label htmlFor="hasReferralCode">I have a referral code</Label>
+              <Label htmlFor="hasAgent">I was referred by an agent</Label>
             </div>
 
-            {hasReferralCode && (
+            {referredByAgent && (
               <div className="space-y-2">
-                <Label htmlFor="referralCode">Referral Code</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="referralCode"
-                    placeholder="Enter your referral code"
-                    value={referralCode}
-                    onChange={(e) => {
-                      setReferralCode(e.target.value.toUpperCase());
-                    }}
-                  />
-                </div>
-                {errors.referral && (
-                  <p className="text-sm text-destructive">{errors.referral}</p>
+                <Label htmlFor="agentSelect">Select Agent</Label>
+
+                {agentsLoading ? (
+                  <p className="text-sm text-muted-foreground">
+                    Loading agents...
+                  </p>
+                ) : agentsError ? (
+                  <p className="text-sm text-destructive">
+                    Failed to load agents
+                  </p>
+                ) : (
+                  <Select value={agent} onValueChange={setAgent}>
+                    <SelectTrigger id="agentSelect" className="w-full">
+                      <SelectValue placeholder="Choose an agent" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {agents?.map((a: any) => (
+                        <SelectItem key={a.agent_no} value={a.agent_no}>
+                          {a.name} ({a.agent_no})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 )}
+
+                {errors.agent && (
+                  <p className="text-sm text-destructive">{errors.agent}</p>
+                )}
+
                 <p className="text-xs text-muted-foreground">
-                  Optional: Enter the referral code provided by your agent if
-                  available.
+                  Optional: Select the agent who referred you, if any.
                 </p>
               </div>
             )}

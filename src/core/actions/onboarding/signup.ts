@@ -4,6 +4,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { getAccountTypes } from "@/core/services/onboarding/accountTypesService";
+import { getAgents } from "@/core/services/onboarding/agentService";
 
 export const fetchAccountTypes = createServerFn({ method: "GET" })
   .handler(async () => {
@@ -14,7 +15,18 @@ export const fetchAccountTypes = createServerFn({ method: "GET" })
       console.error("fetchAccountTypes action error:", error);
     return { success: false, error: "Failed to fetch account types" };
   }
-});
+  });
+
+  export const fetchAgents = createServerFn({ method: "GET" })
+  .handler(async () => {
+    try {
+      const data = await getAgents();
+      return { success: true, data };
+    } catch (error) {
+      console.error("fetchAgents action error:", error);
+    return { success: false, error: "Failed to fetch agents" };
+  }
+  });
 
 
 

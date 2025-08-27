@@ -8,7 +8,7 @@ const mySchema = pgSchema(dbConfig.dbSchema);
 
 export const memberPass = mySchema.table("um_memberpass", {
   id: serial("id").primaryKey(),
-  member_no: uuid("member_no").references(() => membersWeb.member_no).notNull(),
+  member_no: varchar("member_no").references(() => membersWeb.member_no).notNull(),
   ref_no: varchar("ref_no", { length: 50 }).notNull(),
   customer_name: varchar("customer_name", { length: 255 }).notNull(),
   category: varchar("category", { length: 50 }).notNull(),
