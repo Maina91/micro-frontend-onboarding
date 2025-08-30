@@ -67,7 +67,7 @@ export function InvestPage() {
         setSubmitted(true);
 
         // Auto-redirect after 7s
-        setTimeout(() => navigate({ to: "/signin" }), 7000);
+        setTimeout(() => navigate({ to: "/login" }), 7000);
       } catch (error) {
         toast.error("An error occurred");
       }     
@@ -282,7 +282,7 @@ export function InvestPage() {
                 You will receive an SMS with details on how to make payment.
               </p>
               <Button
-                onClick={() => navigate({ to: "/signin" })}
+                onClick={() => navigate({ to: "/login" })}
                 className="mt-4 w-full"
               >
                 Proceed to Login

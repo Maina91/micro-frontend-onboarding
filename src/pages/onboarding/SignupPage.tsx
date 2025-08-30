@@ -46,7 +46,7 @@ export function SignupPage() {
       <div className="text-center">
         <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
-          <a href="/onboarding/signin" className="text-primary hover:underline">
+          <a href="/login" className="text-primary hover:underline">
             Sign in here
           </a>
         </p>

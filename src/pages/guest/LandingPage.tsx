@@ -37,7 +37,7 @@ export default function LandingPage() {
           </nav>
           <div className="flex gap-3">
             <Button variant="outline" asChild>
-              <a href="/signin">Client Portal</a>
+              <a href="/login">Client Portal</a>
             </Button>
             <Button asChild>
               <a href="/onboarding/signup">Open Account</a>
