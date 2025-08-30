@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
+    "strict": true,
     "jsx": "react-jsx",
+    "esModuleInterop": true,
     "moduleResolution": "Bundler",
     "module": "ESNext",
     "target": "ES2022",
     "skipLibCheck": true,
     "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
