@@ -32,7 +32,6 @@ interface PreSignupFormProps {
   }) => void;
 }
 
-// ✅ Schema for validation
 const PreSignupSchema = z.object({
   accountType: z.string().nonempty("Please select an account type"),
   agent: z.string().optional(),
@@ -56,7 +55,6 @@ export function PreSignupForm({
     isError: agentsError,
   } = useAgents();
 
-  // ✅ Setup TanStack Form
   const form = useForm({
     defaultValues: {
       accountType: defaultValues?.accountType ?? "",

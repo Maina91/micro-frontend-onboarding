@@ -16,7 +16,7 @@ type Props = {
   mode: "phone" | "email";
   title: string;
   description: string;
-  fieldName: string; // "phone" | "email"
+  fieldName: string; 
   placeholder: string;
   sendOtp: (
     identifier: string

@@ -5,6 +5,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getAccountTypes } from "@/core/services/onboarding/accountTypesService";
 import { getAgents } from "@/core/services/onboarding/agentService";
+import { getSecurities } from "@/core/services/onboarding/securitiesService";
 
 export const fetchAccountTypes = createServerFn({ method: "GET" })
   .handler(async () => {
@@ -39,38 +40,14 @@ export const fetchAccountTypes = createServerFn({ method: "GET" })
   }
   });
 
+  export const fetchSecurities = createServerFn({ method: "GET" })
+  .handler(async () => {
+    try {
+      const data = await getSecurities();
+      return { success: true, data };
+    } catch (error) {
+      console.error("fetchSecurities action error:", error);
+    return { success: false, error: "Failed to fetch securities" };
+  }
+  });
 
-
-// export const signupSchema = z
-//   .object({
-//     firstName: z.string().min(2),
-//     lastName: z.string().min(2),
-//     email: z.string().email(),
-//     phone: z.string(),
-//     password: z.string().min(8),
-//     confirmPassword: z.string(),
-//     accountType: z.enum([
-//       "kenyan_individual",
-//       "foreign_individual",
-//       "minor",
-//       "joint_account",
-//       "corporate",
-//       "trust",
-//     ]),
-//     referralCode: z.string().optional(),
-//   })
-//   .refine((data) => data.password === data.confirmPassword, {
-//     message: "Passwords don't match",
-//     path: ["confirmPassword"],
-//   });
-
-// export const signupFn = createServerFn({ method: "POST" })
-//   .validator(signupSchema)
-//   .handler(async ({ data }) => {
-//     try {
-//       return await memberService.signup(data);
-//     } catch (error) {
-//       console.error("[SIGNUP_ERROR]", error);
-//       throw new Error("Failed to create account. Please try again.");
-//     }
-//   });

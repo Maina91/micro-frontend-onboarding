@@ -1,4 +1,3 @@
-// src/pages/onboarding/SignupForm.tsx
 import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
@@ -19,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Eye, EyeOff, CheckCircle, XCircle, ArrowLeft } from "lucide-react";
 import { useIdentificationTypes } from "@/hooks/useIdentificationTypes";
+import { toast } from "sonner";
 
 const passwordRules = [
   { test: (val: string) => val.length >= 8, label: "At least 8 characters" },
@@ -62,6 +62,7 @@ export function SignupForm({ preSignupData, onBack }: SignupFormProps) {
     },
     onSubmit: async ({ value }) => {
       console.log("Submitted:", { ...preSignupData, ...value });
+      toast("Signup successful");
       // TODO: call signupAction({ ...preSignupData, ...value })
     },
   });
