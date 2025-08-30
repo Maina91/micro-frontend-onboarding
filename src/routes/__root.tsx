@@ -10,6 +10,7 @@ import appCss from "../styles/app.css?url";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/core/lib/query-client";
+import { Toaster } from "@/components/ui/sonner";
 
 
 export const Route = createRootRoute({
@@ -54,6 +55,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body>
         {children}
+        <Toaster position={"top-center"} richColors={true} />
         <Scripts />
       </body>
     </html>

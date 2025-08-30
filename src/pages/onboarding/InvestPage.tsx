@@ -12,6 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
+import { Navigate, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 
 const investSchema = z
   .object({
@@ -40,7 +43,10 @@ const investSchema = z
 type InvestFormValues = z.infer<typeof investSchema>;
 
 export function InvestPage() {
+  const navigate = useNavigate();
   const { data: securities, isLoading, error } = useSecurities();
+  const [submitted, setSubmitted] = useState(false);
+
   const form = useForm({
     defaultValues: {
       security: "",
@@ -50,8 +56,21 @@ export function InvestPage() {
       sourceOfFundsOther: "",
     },
     onSubmit: async ({ value }) => {
-      console.log("Investment submitted:", value);
-      toast("Investment submitted successfully");
+      try {
+        // Simulate API call
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        console.log("Investment submitted:", value);
+        toast.success("Investment submitted successfully");
+
+        // Set a form state flag to show modal
+        setSubmitted(true);
+
+        // Auto-redirect after 7s
+        setTimeout(() => navigate({ to: "/signin" }), 7000);
+      } catch (error) {
+        toast.error("An error occurred");
+      }     
     },
   });
 
@@ -241,6 +260,37 @@ export function InvestPage() {
           Invest
         </Button>
       </form>
+
+      <AnimatePresence>
+        {submitted && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          >
+            <motion.div
+              initial={{ y: 20 }}
+              animate={{ y: 0 }}
+              exit={{ y: 20 }}
+              className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center space-y-4"
+            >
+              <h2 className="text-2xl font-semibold">
+                You have completed your application!
+              </h2>
+              <p className="text-muted-foreground">
+                You will receive an SMS with details on how to make payment.
+              </p>
+              <Button
+                onClick={() => navigate({ to: "/signin" })}
+                className="mt-4 w-full"
+              >
+                Proceed to Login
+              </Button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
