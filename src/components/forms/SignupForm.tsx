@@ -19,6 +19,7 @@ import {
 import { Eye, EyeOff, CheckCircle, XCircle, ArrowLeft } from "lucide-react";
 import { useIdentificationTypes } from "@/hooks/useIdentificationTypes";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 
 const passwordRules = [
   { test: (val: string) => val.length >= 8, label: "At least 8 characters" },
@@ -42,6 +43,7 @@ interface SignupFormProps {
 }
 
 export function SignupForm({ preSignupData, onBack }: SignupFormProps) {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -61,9 +63,15 @@ export function SignupForm({ preSignupData, onBack }: SignupFormProps) {
       confirmPassword: "",
     },
     onSubmit: async ({ value }) => {
-      console.log("Submitted:", { ...preSignupData, ...value });
-      toast("Signup successful");
-      // TODO: call signupAction({ ...preSignupData, ...value })
+      try {
+        // Simulate API call
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        console.log("Submitted:", { ...preSignupData, ...value });
+        toast.success("Saved successfully");
+        navigate({ to: "/onboarding/verify-phone-otp" });
+      } catch (error) {
+        toast.error("An error occurred. Please try again later");
+      }
     },
   });
 
