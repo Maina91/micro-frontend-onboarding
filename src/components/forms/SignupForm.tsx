@@ -1,79 +1,46 @@
-import type React from "react";
-import { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Checkbox } from "../ui/checkbox";
+import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Badge } from "../ui/badge";
-// import { signupAction } from "@/core/actions/onboarding/signup";
-import type { SignupFormData } from "@/core/validators/signup.schema";
-import { ArrowLeft, Shield } from "lucide-react";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ArrowLeft } from "lucide-react";
+
+import { useForm } from "@tanstack/react-form";
+import { useIdentificationTypes } from "@/hooks/useIdentificationTypes";
 
 interface SignupFormProps {
   preSignupData: {
     accountType: string;
     agent_no?: string;
-    
   };
   onBack: () => void;
 }
 
-
 export function SignupForm({ preSignupData, onBack }: SignupFormProps) {
-  const [formData, setFormData] = useState<SignupFormData>({
-    accountType: preSignupData.accountType as any,
-    agent_no: preSignupData.agent_no || "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
-    agreeToTermsPrivacy: false,
-    consentToSms: false,
+  const {
+    data: identificationTypes,
+    isLoading,
+    isError,
+  } = useIdentificationTypes();
+
+  const form = useForm({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      identificationType: "",
+      identificationNumber: "",
+    },
+    onSubmit: async ({ value }) => {
+      console.log("Submitted:", value);
+      // TODO: hook into signupAction here
+    },
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrors({});
-
-    // try {
-    //   const result = await signupAction(formData);
-
-    //   if (result.success) {
-    //     // Redirect to phone OTP verification first
-    //     window.location.href = `/onboarding/verify-otp?type=phone&email=${encodeURIComponent(formData.email)}`;
-    //   } else {
-    //     setErrors({ general: result.error || "Signup failed" });
-    //   }
-    // } catch (error) {
-    //   console.error("[SIGNUP_FORM_ERROR]", error);
-    //   setErrors({ general: "An unexpected error occurred" });
-    // } finally {
-    //   setIsLoading(false);
-    // }
-  };
-
-  const handleInputChange = (
-    field: keyof SignupFormData,
-    value: string | boolean
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -92,82 +59,159 @@ export function SignupForm({ preSignupData, onBack }: SignupFormProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {errors.general && (
-              <div className="p-3 text-sm text-destructive-foreground bg-destructive/10 border border-destructive/20 rounded-md">
-                {errors.general}
-              </div>
-            )}
-
-            {/* Personal Details */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+            className="space-y-6"
+          >
+            {/* First + Last Name */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firstName">First Name *</Label>
-                <Input
-                  id="firstName"
-                  value={formData.firstName}
-                  onChange={(e) =>
-                    handleInputChange("firstName", e.target.value)
-                  }
-                  className={errors.firstName ? "border-destructive" : ""}
-                />
-                {errors.firstName && (
-                  <p className="text-sm text-destructive">{errors.firstName}</p>
+              <form.Field
+                name="firstName"
+                validators={{
+                  onChange: ({ value }) =>
+                    !value ? "First name is required" : undefined,
+                }}
+              >
+                {(field) => (
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">First Name *</Label>
+                    <Input
+                      id="firstName"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                    {field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-destructive">
+                        {field.state.meta.errors.join(", ")}
+                      </p>
+                    )}
+                  </div>
                 )}
-              </div>
+              </form.Field>
 
-              <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name *</Label>
-                <Input
-                  id="lastName"
-                  value={formData.lastName}
-                  onChange={(e) =>
-                    handleInputChange("lastName", e.target.value)
-                  }
-                  className={errors.lastName ? "border-destructive" : ""}
-                />
-                {errors.lastName && (
-                  <p className="text-sm text-destructive">{errors.lastName}</p>
+              <form.Field
+                name="lastName"
+                validators={{
+                  onChange: ({ value }) =>
+                    !value ? "Last name is required" : undefined,
+                }}
+              >
+                {(field) => (
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last Name *</Label>
+                    <Input
+                      id="lastName"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                    {field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-destructive">
+                        {field.state.meta.errors.join(", ")}
+                      </p>
+                    )}
+                  </div>
                 )}
-              </div>
+              </form.Field>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className={errors.email ? "border-destructive" : ""}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
-              )}
-            </div>
+            {/* Identification Type */}
+            <form.Field
+              name="identificationType"
+              validators={{
+                onChange: ({ value }) =>
+                  !value ? "Identification type is required" : undefined,
+              }}
+            >
+              {(field) => (
+                <div className="space-y-2">
+                  <Label>Identification Type *</Label>
 
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number *</Label>
-              <Input
-                id="phone"
-                type="tel"
-                placeholder="+254 700 000 000"
-                value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                className={errors.phone ? "border-destructive" : ""}
-              />
-              {errors.phone && (
-                <p className="text-sm text-destructive">{errors.phone}</p>
+                  {/* Loading State */}
+                  {isLoading && (
+                    <Select disabled>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Loading..." />
+                      </SelectTrigger>
+                    </Select>
+                  )}
+
+                  {/* Error State */}
+                  {isError && (
+                    <p className="text-sm text-destructive">
+                      Failed to load identification types
+                    </p>
+                  )}
+
+                  {/* Success State */}
+                  {!isLoading && !isError && identificationTypes && (
+                    <Select
+                      value={field.state.value}
+                      onValueChange={(val) => field.handleChange(val)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="--- Select Identification Type ---" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {identificationTypes.map((type) => (
+                          <SelectItem key={type.id} value={type.id.toString()}>
+                            {type.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+
+                  {/* Validation error */}
+                  {field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-destructive">
+                      {field.state.meta.errors.join(", ")}
+                    </p>
+                  )}
+                </div>
               )}
-            </div>
-            
+            </form.Field>
+
+            {/* Identification Number */}
+            <form.Field
+              name="identificationNumber"
+              validators={{
+                onChange: ({ value }) =>
+                  !value ? "Identification number is required" : undefined,
+              }}
+            >
+              {(field) => (
+                <div className="space-y-2">
+                  <Label htmlFor="identificationNumber">
+                    Identification Number *
+                  </Label>
+                  <Input
+                    id="identificationNumber"
+                    placeholder="Enter your ID / Passport No."
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-destructive">
+                      {field.state.meta.errors.join(", ")}
+                    </p>
+                  )}
+                </div>
+              )}
+            </form.Field>
+
+            {/* Submit */}
             <Button
               type="submit"
               className="w-full"
               size="lg"
-              disabled={isLoading}
+              disabled={form.state.isSubmitting}
             >
-              {isLoading ? "Creating Account..." : "Create Account"}
+              {form.state.isSubmitting
+                ? "Processing..."
+                : "Continue"}
             </Button>
           </form>
         </CardContent>

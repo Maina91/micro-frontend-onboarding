@@ -28,6 +28,16 @@ export const fetchAccountTypes = createServerFn({ method: "GET" })
   }
   });
 
+  export const fetchIdentificationTypes = createServerFn({ method: "GET" })
+  .handler(async () => {
+    try {
+      const data = await getAgents();
+      return { success: true, data };
+    } catch (error) {
+      console.error("fetchAgents action error:", error);
+    return { success: false, error: "Failed to fetch agents" };
+  }
+  });
 
 
 
