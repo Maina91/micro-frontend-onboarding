@@ -80,9 +80,6 @@ export function PreSignupForm({
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-2">
-          Get Started with MMF
-        </h2>
         <p className="text-muted-foreground">
           Choose your account type to begin your investment journey
         </p>
