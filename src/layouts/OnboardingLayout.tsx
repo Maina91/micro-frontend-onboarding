@@ -29,7 +29,8 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
         initial={{ opacity: 0, x: -40 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.7 }}
-        className="hidden lg:flex relative flex-1"
+        // className="hidden lg:flex relative flex-1"
+        className="hidden lg:flex relative lg:basis-5/12 xl:basis-4/12"
       >
         <img
           src="/images/side.jpg"
@@ -52,7 +53,8 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
       </motion.div>
 
       {/* Right section: Stepper + Form */}
-      <main className="flex flex-1 items-center justify-center px-2 py-4">
+      {/* <main className="flex flex-1 items-center justify-center px-2 py-4"> */}
+      <main className="flex lg:basis-7/12 xl:basis-8/12 items-center justify-center px-2 py-4">
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
