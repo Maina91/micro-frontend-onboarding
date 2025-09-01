@@ -3,7 +3,7 @@ import { Stepper } from "@/components/ui/stepper";
 import { useLocation } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 
-const steps = ["Signup", "Verify Phone", "Verify Email", "Complete"];
+const steps = ["Signup", "Verify Phone", "Complete"];
 
 interface OnboardingLayoutProps {
   children: React.ReactNode;
@@ -15,8 +15,7 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
   const getActiveStep = () => {
     if (location.pathname.includes("signup")) return 0;
     if (location.pathname.includes("verify-phone-otp")) return 1;
-    if (location.pathname.includes("verify-email-otp")) return 2;
-    if (location.pathname.includes("invest")) return 3;
+    if (location.pathname.includes("invest")) return 2;
     return 0;
   };
 
