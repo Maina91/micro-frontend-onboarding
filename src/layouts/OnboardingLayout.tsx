@@ -24,27 +24,23 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-muted/20">
-      {/* Left section: full image background */}
       <motion.div
         initial={{ opacity: 0, x: -40 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.7 }}
-        // className="hidden lg:flex relative flex-1"
-        className="hidden lg:flex relative lg:basis-5/12 xl:basis-4/12"
+        className="relative hidden sm:block lg:basis-5/12 xl:basis-4/12"
       >
         <img
           src="/images/side.jpg"
           alt="Onboarding Illustration"
           className="absolute inset-0 w-full h-full object-cover"
         />
-
-        {/* Logo on top-left of the image */}
-        <div className="absolute top-3 left-6">
+        <div className="absolute inset-0 bg-gradient-to-tr from-black/60 via-black/30 to-transparent" />
+        <div className="absolute top-3 left-4 sm:left-6">
           <motion.img
             src="/images/logo.png"
             alt="Aurora Capital"
-            width={80}
-            height={80}
+            className="w-12 h-12 sm:w-16 sm:h-16"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -52,17 +48,14 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
         </div>
       </motion.div>
 
-      {/* Right section: Stepper + Form */}
-      {/* <main className="flex flex-1 items-center justify-center px-2 py-4"> */}
-      <main className="flex lg:basis-7/12 xl:basis-8/12 items-center justify-center px-2 py-4">
+      <main className="flex flex-1 lg:basis-7/12 xl:basis-8/12 items-center justify-center px-3 sm:px-6 py-6">
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7 }}
-          className="w-full max-w-lg bg-background shadow-xl rounded-2xl p-8 md:p-10"
+          className="w-full max-w-lg bg-background shadow-xl rounded-2xl p-6 sm:p-8 md:p-10"
         >
-          {/* Stepper */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <Stepper steps={steps} activeStep={activeStep} />
             <div className="mt-4 w-full bg-muted h-2 rounded-full overflow-hidden">
               <div
@@ -71,8 +64,6 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
               />
             </div>
           </div>
-
-          {/* Dynamic Page Content */}
           <div>{children}</div>
         </motion.div>
       </main>
